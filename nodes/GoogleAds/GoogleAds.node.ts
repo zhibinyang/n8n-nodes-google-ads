@@ -125,11 +125,11 @@ export class GoogleAds implements INodeType {
 		const client = createGoogleAdsClient(credentials);
 
 		const resource = this.getNodeParameter('resource', 0) as string;
-		const operation = this.getNodeParameter('operation', 0) as string;
 
 		for (let i = 0; i < items.length; i++) {
 			try {
 				if (resource === 'campaign') {
+					const operation = this.getNodeParameter('operation', i) as string;
 					const managerCustomerId = this.getNodeParameter('managerCustomerId', i) as string;
 					const clientCustomerId = this.getNodeParameter('clientCustomerId', i) as string;
 
