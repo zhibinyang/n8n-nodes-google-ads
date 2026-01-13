@@ -1,6 +1,9 @@
 {
 	"name": "@zhibinyang/n8n-nodes-google-ads",
 	"version": "0.0.1",
+        "publishConfig": {
+          "access": "public"
+        },
 	"description": "n8n community node for Google Ads API integration using google-ads-api SDK",
 	"license": "MIT",
 	"homepage": "",
