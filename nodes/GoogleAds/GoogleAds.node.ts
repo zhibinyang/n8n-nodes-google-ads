@@ -8,7 +8,7 @@ import {
 } from 'n8n-workflow';
 
 import { campaignFields, campaignOperations } from './CampaignDescription';
-import { createGoogleAdsClient, createCustomer, getCampaigns, getCampaignById } from './GoogleAdsHelpers';
+import { createGoogleAdsClient, createCustomer, getCampaigns, getCampaignById, executeCustomQuery } from './GoogleAdsHelpers';
 
 export class GoogleAds implements INodeType {
 	description: INodeTypeDescription = {
@@ -42,8 +42,57 @@ export class GoogleAds implements INodeType {
 						name: 'Campaign',
 						value: 'campaign',
 					},
+					{
+						name: 'Custom Query',
+						value: 'customQuery',
+					},
 				],
 				default: 'campaign',
+			},
+			//-------------------------------
+			// Custom Query Fields
+			//-------------------------------
+			{
+				displayName: 'Manager Customer ID',
+				name: 'managerCustomerId',
+				type: 'string',
+				required: true,
+				placeholder: '9998887777',
+				displayOptions: {
+					show: {
+						resource: ['customQuery'],
+					},
+				},
+				default: '',
+			},
+			{
+				displayName: 'Client Customer ID',
+				name: 'clientCustomerId',
+				type: 'string',
+				required: true,
+				placeholder: '6665554444',
+				displayOptions: {
+					show: {
+						resource: ['customQuery'],
+					},
+				},
+				default: '',
+			},
+			{
+				displayName: 'GAQL Query',
+				name: 'gaqlQuery',
+				type: 'string',
+				typeOptions: {
+					rows: 10,
+				},
+				required: true,
+				displayOptions: {
+					show: {
+						resource: ['customQuery'],
+					},
+				},
+				default: 'SELECT campaign.id, campaign.name FROM campaign LIMIT 10',
+				description: 'Google Ads Query Language (GAQL) query. See <a href="https://developers.google.com/google-ads/api/docs/query/overview">GAQL documentation</a> for syntax.',
 			},
 			//-------------------------------
 			// Campaign Operations
@@ -120,6 +169,29 @@ export class GoogleAds implements INodeType {
 						for (const campaign of campaigns) {
 							returnData.push({ json: campaign });
 						}
+					}
+				} else if (resource === 'customQuery') {
+					const managerCustomerId = this.getNodeParameter('managerCustomerId', i) as string;
+					const clientCustomerId = this.getNodeParameter('clientCustomerId', i) as string;
+					const gaqlQuery = this.getNodeParameter('gaqlQuery', i) as string;
+
+					// Extract refresh token from credentials
+					const refreshToken = (credentials.oauthTokenData as { refresh_token?: string })?.refresh_token as string;
+
+					if (!refreshToken) {
+						throw new NodeOperationError(
+							this.getNode(),
+							'No refresh token found in credentials. Please re-authenticate with Google Ads.',
+						);
+					}
+
+					// Create customer instance
+					const customer = createCustomer(client, clientCustomerId, managerCustomerId, refreshToken);
+
+					const results = await executeCustomQuery(customer, gaqlQuery);
+
+					for (const result of results) {
+						returnData.push({ json: result });
 					}
 				}
 			} catch (error) {

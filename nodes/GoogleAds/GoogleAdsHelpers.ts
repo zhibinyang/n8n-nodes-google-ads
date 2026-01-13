@@ -119,3 +119,29 @@ export async function getCampaignById(
         ...(row.campaign_budget as IDataObject),
     } as IDataObject));
 }
+
+/**
+ * Executes a custom GAQL query and returns raw results
+ */
+export async function executeCustomQuery(
+    customer: Customer,
+    query: string,
+): Promise<IDataObject[]> {
+    const results = await customer.query(query);
+
+    // Return raw results, flattening each row's properties
+    return results.map((row) => {
+        const flatRow: IDataObject = {};
+        for (const [key, value] of Object.entries(row)) {
+            if (value && typeof value === 'object') {
+                // Flatten nested objects
+                for (const [nestedKey, nestedValue] of Object.entries(value as Record<string, unknown>)) {
+                    flatRow[`${key}_${nestedKey}`] = nestedValue as IDataObject[keyof IDataObject];
+                }
+            } else {
+                flatRow[key] = value as IDataObject[keyof IDataObject];
+            }
+        }
+        return flatRow;
+    });
+}
