@@ -1,15 +1,15 @@
 {
 	"name": "@zhibinyang/n8n-nodes-google-ads",
 	"version": "0.0.1",
-	"description": "",
+	"description": "n8n community node for Google Ads API integration using google-ads-api SDK",
 	"license": "MIT",
 	"homepage": "",
 	"keywords": [
 		"n8n-community-node-package"
 	],
 	"author": {
-		"name": "",
-		"email": ""
+		"name": "Zhibin Yang",
+		"email": "yzb7530326309@gmail.com"
 	},
 	"repository": {
 		"type": "git",
@@ -29,14 +29,12 @@
 	],
 	"n8n": {
 		"n8nNodesApiVersion": 1,
-		"strict": true,
+		"strict": false,
 		"credentials": [
-			"dist/credentials/GithubIssuesApi.credentials.js",
-			"dist/credentials/GithubIssuesOAuth2Api.credentials.js"
+			"dist/credentials/GoogleAdsOAuth2Api.credentials.js"
 		],
 		"nodes": [
-			"dist/nodes/GithubIssues/GithubIssues.node.js",
-			"dist/nodes/Example/Example.node.js"
+			"dist/nodes/GoogleAds/GoogleAds.node.js"
 		]
 	},
 	"devDependencies": {

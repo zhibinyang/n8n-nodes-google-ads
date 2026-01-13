@@ -1,5 +1,6 @@
 import {
 	NodeConnectionTypes,
+	NodeOperationError,
 	type IExecuteFunctions,
 	type INodeExecutionData,
 	type INodeType,
@@ -88,7 +89,10 @@ export class GoogleAds implements INodeType {
 					const refreshToken = (credentials.oauthTokenData as { refresh_token?: string })?.refresh_token as string;
 
 					if (!refreshToken) {
-						throw new Error('No refresh token found in credentials. Please re-authenticate with Google Ads.');
+						throw new NodeOperationError(
+							this.getNode(),
+							'No refresh token found in credentials. Please re-authenticate with Google Ads.',
+						);
 					}
 
 					// Create customer instance
