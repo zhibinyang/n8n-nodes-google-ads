@@ -47,14 +47,19 @@ This project uses **esbuild** instead of the traditional TypeScript compiler (ts
 ### Build Commands
 
 ```bash
-# Build once
+# Build for production (default - minified, no sourcemaps)
 npm run build
 
-# Build and watch for changes (development)
+# Build for development (with sourcemaps for debugging)
+npm run build:dev
+
+# Build and watch for changes (development mode)
 npm run build:watch
 ```
 
-For more details about the esbuild configuration and optimization techniques, see [ESBUILD.md](./ESBUILD.md).
+**Comparison**:
+- **Production build** (`npm run build`): ~23MB, minified for deployment (default)
+- **Development build** (`npm run build:dev`): ~53MB, includes sourcemaps for debugging
 
 **Reference**: This build configuration is based on [n8n-nodes-esbuild-starter](https://github.com/zhibinyang/n8n-nodes-esbuild-starter).
 
