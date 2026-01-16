@@ -33,6 +33,31 @@ npm link @zhibinyang/n8n-nodes-google-ads
 1. Copy the built `dist` folder to your n8n custom nodes directory
 2. Restart n8n
 
+## Build System
+
+This project uses **esbuild** instead of the traditional TypeScript compiler (tsc) to significantly reduce the build output size and optimize for Cloud Run + GCS deployment.
+
+### Benefits
+
+- ✓ **Optimized bundle size**: All dependencies (including `google-ads-api`) are bundled into single files
+- ✓ **Faster builds**: Build completes in ~3 seconds
+- ✓ **Fewer files**: Minimal file count for better GCS mounting performance
+- ✓ **Self-contained**: All dependencies included in the bundle, no external node_modules needed at runtime
+
+### Build Commands
+
+```bash
+# Build once
+npm run build
+
+# Build and watch for changes (development)
+npm run build:watch
+```
+
+For more details about the esbuild configuration and optimization techniques, see [ESBUILD.md](./ESBUILD.md).
+
+**Reference**: This build configuration is based on [n8n-nodes-esbuild-starter](https://github.com/zhibinyang/n8n-nodes-esbuild-starter).
+
 ## Operations
 
 ### Campaign

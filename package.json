@@ -19,9 +19,9 @@
 		"url": "https://github.com/zhibinyang/n8n-nodes-google-ads.git"
 	},
 	"scripts": {
-		"build": "n8n-node build",
-		"build:watch": "tsc --watch",
-		"dev": "n8n-node dev",
+		"build": "node esbuild.config.mjs",
+		"build:n8n": "n8n-node build",
+		"build:watch": "node esbuild.config.mjs --watch",
 		"lint": "n8n-node lint",
 		"lint:fix": "n8n-node lint --fix",
 		"release": "n8n-node release",
@@ -42,7 +42,9 @@
 	},
 	"devDependencies": {
 		"@n8n/node-cli": "*",
+		"esbuild": "^0.27.2",
 		"eslint": "9.32.0",
+		"glob": "^13.0.0",
 		"prettier": "3.6.2",
 		"release-it": "^19.0.4",
 		"typescript": "5.9.2"
